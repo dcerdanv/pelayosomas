@@ -1,0 +1,317 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+
+description: snakemake configuration file
+
+type: object
+
+properties:
+    samples:
+        type: string
+    units:
+        type: string
+    outdir: 
+        type: string
+    logdir: 
+        type: string
+    aligner:
+        type: integer
+    quantifier:
+        type: integer
+
+    
+    ref:
+        properties:
+            star:
+                type: object
+                properties:
+                    annotation:
+                        type: string
+                    fasta:
+                        type: string
+                    star_index:
+                        type: string
+            
+            salmon:
+                type: object
+                properties:
+                    transcriptome:
+                        type: string
+                    genome_assembly:
+                        type: string
+                    salmon_index:
+                        type: string
+            
+            hisat2:
+                type: object
+                properties:
+                    annotation:
+                        type: string
+                    fasta:
+                        type: string
+                    hisat2_index:
+                        type: string
+                        
+
+    parameters:
+        properties:
+            trimming:
+                type: object
+                properties:
+                    adapters:
+                        type: string
+                    extra:
+                        type: string
+
+            salmon:
+                type: object
+                properties:
+                    libtype:
+                        type: string
+                    adapters:
+                        type: string
+                    extra:
+                        type: string
+
+            salmon_index:
+                type: object
+                properties:
+                    gencode:
+                        type: boolean
+                        
+            multiqc:
+                type: string
+
+            htseq-count:
+                type: object
+                properties:
+                    mode:
+                        type: string
+                    strandedness:
+                        type: string
+            
+            featureCounts:
+                type: object
+                properties:
+                    extra:
+                        type: string
+                    strandedness:
+                        type: string
+
+            deseq2:
+                type: object
+                properties:
+                    designmatrix:
+                        type: string
+                    design:
+                        type: string
+                required:
+                    - designmatrix
+                    - design
+
+    
+    resources:
+        properties:
+            default:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            fastqc:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+    
+            multiqc:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            trim_adapters_single_end:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            trim_adapters_paired_end:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer  
+                                  
+            salmon_quant:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            star_align:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            hisat2_align:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            hisat2_sort:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            bam_indexing:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            htseq_count:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            featureCounts:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            salmon_matrix_from_quants:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+                           
+            htseq_count_matrix:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            fcounts_count_matrix:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            deseq2_init:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+            deseq2_diffexp:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            salmon_index:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            star_index:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+            
+            hisat2_index:
+                type: object
+                properties:
+                    threads:
+                        type: integer
+                    mem:
+                        type: integer
+                    walltime:
+                        type: integer
+
+
+required:
+    - samples
+    - units

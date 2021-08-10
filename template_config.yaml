@@ -1,0 +1,186 @@
+# path or URL to sample sheet
+samples: samples.tsv
+
+# path or URL to sequencing unit sheet
+units: units.tsv
+
+# path to the results directory
+outdir: ''
+
+# path to the logs directory
+logdir: ''
+
+## ALIGNER ##
+# 0 = STAR, 1 = SALMON, 2 = HISAT2
+aligner: 0
+
+## QUANTIFIER ##
+# 0 = HTSEQ, 1 = FEATURECOUNTS
+quantifier: 1
+
+
+# genomic reference sequences and annotations for aligners and quantifiers
+ref:
+    star:
+        annotation: "/my/annotation.gtf"
+        # fasta file with transcripts
+        fasta: "/my/genome.fasta"
+        # STAR aligner index path (auto generated if not already present)
+        # Deafult: Cluster's shared index
+        #star_index: "/storage/scratch01/shared/indexes/h_sapiens/gencode/v38/star/2.7.9a"
+        star_index: "/my/genome_idx"
+    
+    salmon: 
+       # salmon transcriptome: .fa.gz
+        transcriptome: "/path/to/salmon/transcriptome"
+        # salmon genome assembly: .ga.gz
+        genome_assembly: "/path/to/salmon/genome_assembly"
+        # Salmon aligner index path (auto generated if not already present)
+        # Deafult: Cluster's shared index
+        #salmon_index: "/storage/scratch01/shared/indexes/h_sapiens/gencode/v38/salmon/1.5.2"
+        salmon_index: "/my/genome_idx"
+    
+    hisat2:
+        annotation: "/my/annotation.gtf"
+        # fasta file with transcripts
+        fasta: "/my/genome.fasta"
+        # HISAT2 aligner index path (auto generated if not already present)
+        hisat2_index: "/my/genome_idx"
+
+
+parameters:
+    trimming:
+            adapters: "resources/trimming/adapters.fa"
+            extra: "-Xmx2g ktrim=r k=23 mink=11 hdist=1"
+
+    ## set it to A for automatic library detection.
+    ## https://salmon.readthedocs.io/en/latest/salmon.html
+    salmon:
+        libtype: 'A'
+        adapters: ""
+        extra: ""
+    
+    salmon_index:
+        gencode: False ## Set to True if transcriptome source is gencode
+    
+    multiqc: "--config res/config/multiqc_config.yaml"
+
+    htseq-count:
+        # Mode: "union", "intersection-strict" or "intersection-nonempty" (default: union)
+        mode: "-m union"
+        # Strandness: "yes", "no" or "reverse" (default: yes)
+        strandedness: "-s yes"
+
+    featureCounts:
+        extra: ""
+        # Strandness: 0 = "unstranded", 1 = "stranded", 2 = "reversely stranded" (default: 0)
+        strandedness: "-s 1"
+
+    deseq2:
+        # path or URL to design matrix
+        designmatrix: "designmatrix.tsv"
+        design: "~condition"
+
+
+
+resources:
+    default:
+        threads: 1
+        mem:  4096
+        walltime: 10
+        
+    fastqc:
+        threads: 1
+        mem:  4096
+        walltime: 10
+        
+    multiqc:
+        threads: 8
+        mem:  4096
+        walltime: 10
+
+    trim_adapters_single_end:
+        threads: 8
+        mem:  4096
+        walltime: 10
+        
+    trim_adapters_paired_end:
+        threads: 8
+        mem:  4096
+        walltime: 10
+ 
+    salmon_quant:
+        threads: 20
+        mem: 32000
+        walltime: 10
+
+    star_align:
+        threads: 8
+        mem: 64000
+        walltime: 60
+
+    hisat2_align:
+        threads: 8
+        mem: 64000
+        walltime: 60
+    
+    hisat2_sort:
+        threads: 8
+        mem:  64000
+        walltime: 60
+
+    bam_indexing:
+        threads: 8
+        mem:  4096
+        walltime: 10
+        
+    htseq_count:
+        threads: 8
+        mem:  64000
+        walltime: 120
+
+    featureCounts:
+        threads: 8
+        mem:  64000
+        walltime: 120
+    
+    salmon_matrix_from_quants:
+        threads: 1
+        mem: 4096
+        walltime: 10
+    
+    htseq_count_matrix:
+        threads: 1
+        mem:  4096
+        walltime: 10
+
+    fcounts_count_matrix:
+        threads: 1
+        mem:  4096
+        walltime: 10
+    
+    deseq2_init:
+        threads: 4
+        mem:  8192
+        walltime: 10
+    
+    deseq2_diffexp:
+        threads: 2
+        mem:  4096
+        walltime: 10
+
+    salmon_index:
+        threads: 32
+        mem: 64000
+        walltime: 180
+
+    star_index:
+        threads: 8
+        mem: 64000
+        walltime: 720
+
+    hisat2_index:
+        threads: 32
+        mem: 64000
+        walltime: 180
+        
