@@ -4,10 +4,10 @@ rule remove_vcf_header:
     output:
         vcf_no_header = temp(f"{OUTDIR}/{{sample}}.ready_noheader.vcf")
     threads:
-        get_resource('default', 'threads')
+        get_resource('remove_vcf_header', 'threads')
     resources:
-        mem=get_resource('default', 'mem'),
-        walltime=get_resource('default', 'walltime')
+        mem=get_resource('remove_vcf_header', 'mem'),
+        walltime=get_resource('remove_vcf_header', 'walltime')
     log:
         f"{LOGDIR}/remove_vcf_header/{{sample}}.log"
     shell: "zcat {input.vcf} | sed '/^#/d' > {output.vcf_no_header}"
@@ -20,10 +20,10 @@ checkpoint split_chr:
     output:
         split_folder = directory(f"{OUTDIR}/split/{{sample}}")
     threads:
-        get_resource('default', 'threads')
+        get_resource('split_chr', 'threads')
     resources:
-        mem=get_resource('default', 'mem'),
-        walltime=get_resource('default', 'walltime')
+        mem=get_resource('split_chr', 'mem'),
+        walltime=get_resource('split_chr', 'walltime')
     log:
         f"{LOGDIR}/split_chr/{{sample}}.log"
     shell: 'mkdir {output.split_folder}; split -d -l 50000 "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-"'

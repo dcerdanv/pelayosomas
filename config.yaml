@@ -30,6 +30,16 @@ resources:
         mem:  4096
         walltime: 10
 
+    remove_vcf_header:
+        threads: 1
+        mem:  12288
+        walltime: 80
+    
+    split_chr:
+        threads: 1
+        mem:  12288
+        walltime: 180
+
     make_long:
         threads: 8
         mem:  24576
