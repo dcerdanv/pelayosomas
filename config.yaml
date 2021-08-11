@@ -13,12 +13,15 @@ chr: 'chr24'
 
 parameters:
     paste_header:
-        header: "resources/chr.header.txt"
+        header_vcf: "resources/chr.header.txt"
     
     make_long:
         infos: "AF DP AN AC"
         formats: "GT AD DP GQ"
         preHeader: "ID"
+
+    join_files:
+        header_tsv: "resources/tsv.header.tsv"
 
 
 resources:
