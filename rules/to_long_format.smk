@@ -50,7 +50,7 @@ rule make_long:
     input:
         headed_file = rules.paste_header.output.headed_file
     output:
-        long_format_part = f"{OUTDIR}/long_part/{{sample}}/{{sample}}.part-{{part}}"
+        long_format_part = temp(f"{OUTDIR}/long_part/{{sample}}/{{sample}}.part-{{part}}")
     threads:
         get_resource('make_long', 'threads')
     resources:
@@ -75,12 +75,11 @@ rule filter:
     resources:
         mem=get_resource('default', 'mem'),
         walltime=get_resource('default', 'walltime')
-    params:
-        infos = get_params('make_long', 'infos'),
-        formats = get_params('make_long', 'formats'),
-        preHeader = get_params('make_long', 'preHeader')
     log:
         f"{LOGDIR}/filtered_part/{{sample}}/{{sample}}.part-{{part}}.log"
+    # Set priority = 10 (Default = 0) to this rule and the following ones so that, if 'filter' and 'make_long'
+    # are available, an instance of 'filter' is executed first and eliminate a possible long format file 
+    priority: 10
     shell: "sed '/\.\/\./d;/0\/0/d' {input.long_part} > {output.filter_part}"
 
 
@@ -95,7 +94,8 @@ rule remove_tsv_header:
         mem=get_resource('default', 'mem'),
         walltime=get_resource('default', 'walltime')
     log:
-        f"{LOGDIR}/remove_tsv_header/{{sample}}.log"
+        f"{LOGDIR}/remove_tsv_header/{{sample}}/{{sample}}.part-{{part}}.log"
+    priority: 10
     shell: "tail -n +2 {input.filter_part} > {output.tsv_no_header}"
 
 
@@ -105,10 +105,8 @@ def aggregate_input(wildcards):
     generated at the scatter step
     '''
     checkpoint_output = checkpoints.split_chr.get(**wildcards).output[0]
-    aux = expand(f"{OUTDIR}/filter_no_header/{wildcards.sample}/{wildcards.sample}.part-{{i}}",
+    return expand(f"{OUTDIR}/filter_no_header/{wildcards.sample}/{wildcards.sample}.part-{{i}}",
            i=glob_wildcards(os.path.join(checkpoint_output, f"{wildcards.sample}.part-{{i}}")).i)
-    print(aux)
-    return aux
 
 
 rule join_files:
@@ -122,6 +120,9 @@ rule join_files:
         mem=get_resource('default', 'mem'),
         walltime=get_resource('default', 'walltime')
     params:
-        header = get_params('paste_header', 'header')
+        header = get_params('join_files', 'header_tsv')
+    log:
+        f"{LOGDIR}/join_files/{{sample}}.log"
+    priority: 10
     shell: "cat {params.header} {input} > {output.combined}"
 

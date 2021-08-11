@@ -35,12 +35,12 @@ def get_params(rule,param) -> int:
 min_version('6.2.1')
 
 configfile: "config.yaml"
-#validate(config, schema="schemas/config.schema.yaml")
+validate(config, schema="schemas/config.schema.yaml")
 
 OUTDIR = config['outdir']
 LOGDIR = config['logdir']
 DATA = config['samples']
-CHR = config['chr']
+CHR_LIST = config['chr_list']
 
 #### Load rules ####
 include: 'rules/to_long_format.smk'
@@ -48,5 +48,10 @@ include: 'rules/to_long_format.smk'
 
 rule all:
 	input:
-		f"{OUTDIR}/final/{CHR}.tsv"
-	shell: f"rm -r {OUTDIR}/split; rm -f {OUTDIR}/headed; rm -r {OUTDIR}/long_part; rm -r {OUTDIR}/filtered_part; rm -r {OUTDIR}/filter_no_header"
+		expand(f"{OUTDIR}/final/{{CHR}}.tsv", CHR=CHR_LIST)
+	threads:
+        get_resource('default', 'threads')
+    resources:
+        mem=get_resource('default', 'mem'),
+        walltime=get_resource('default', 'walltime')
+	shell: f"rm -r {OUTDIR}/split; rm -r {OUTDIR}/headed; rm -r {OUTDIR}/long_part; rm -r {OUTDIR}/filtered_part; rm -r {OUTDIR}/filter_no_header"

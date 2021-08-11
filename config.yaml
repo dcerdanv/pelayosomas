@@ -8,8 +8,8 @@ outdir: 'results'
 # path to the logs directory
 logdir: 'logs'
 
-# Chr we wanna run
-chr: 'chr24'
+# Chrs we wanna run
+chr_list: ["chr22", "chr23"]
 
 parameters:
     paste_header:
@@ -32,5 +32,5 @@ resources:
 
     make_long:
         threads: 8
-        mem:  4096
+        mem:  24576
         walltime: 120
