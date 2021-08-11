@@ -28,7 +28,7 @@ resources:
     default:
         threads: 1
         mem:  4096
-        walltime: 10
+        walltime: 40
 
     remove_vcf_header:
         threads: 1
