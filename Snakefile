@@ -50,8 +50,8 @@ rule all:
 	input:
 		expand(f"{OUTDIR}/final/{{CHR}}.tsv", CHR=CHR_LIST)
 	threads:
-        get_resource('default', 'threads')
-    resources:
-        mem=get_resource('default', 'mem'),
-        walltime=get_resource('default', 'walltime')
+		get_resource('default', 'threads')
+	resources:
+		mem=get_resource('default', 'mem'),
+		walltime=get_resource('default', 'walltime')
 	shell: f"rm -r {OUTDIR}/split; rm -r {OUTDIR}/headed; rm -r {OUTDIR}/long_part; rm -r {OUTDIR}/filtered_part; rm -r {OUTDIR}/filter_no_header"
