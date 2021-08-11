@@ -44,6 +44,7 @@ configfile: "config.yaml"
 OUTDIR = config['outdir']
 LOGDIR = config['logdir']
 DATA = config['samples']
+CHR = config['chr']
 
 #### Load rules ####
 include: 'rules/to_long_format.smk'
@@ -115,4 +116,4 @@ include: 'rules/to_long_format.smk'
 
 rule all:
 	input:
-		f"{OUTDIR}/final/chr24.tsv"
+		f"{OUTDIR}/final/{CHR}.tsv"

@@ -8,6 +8,8 @@ outdir: 'results'
 # path to the logs directory
 logdir: 'logs'
 
+# Chr we wanna run
+chr: 'chr24'
 
 parameters:
     paste_header:
