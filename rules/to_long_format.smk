@@ -62,7 +62,7 @@ rule make_long:
         preHeader = get_params('make_long', 'preHeader')
     log:
         f"{LOGDIR}/make_long/{{sample}}/{{sample}}.part-{{part}}.log"
-    shell: 'python3 VCF-Simplify/VcfSimplify.py SimplifyVCF -toType table -inVCF {input.headed_file} -outFile {output.long_format_part} -infos {params.infos} -formats {params.formats} -preHeader {params.preHeader} -mode long'
+    shell: 'python3 VCF-Simplify-master/VcfSimplify.py SimplifyVCF -toType table -inVCF {input.headed_file} -outFile {output.long_format_part} -infos {params.infos} -formats {params.formats} -preHeader {params.preHeader} -mode long'
 
 
 rule filter:
