@@ -23,6 +23,12 @@ properties:
                     header_vcf:
                         type: string
 
+            split_chr:
+                type: object
+                properties:
+                    num_lines:
+                        type: string
+
             make_long:
                 type: object
                 properties:

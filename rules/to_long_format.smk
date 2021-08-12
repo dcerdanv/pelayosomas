@@ -24,9 +24,11 @@ checkpoint split_chr:
     resources:
         mem=get_resource('split_chr', 'mem'),
         walltime=get_resource('split_chr', 'walltime')
+    params:
+        split_size = get_params('split_chr', 'num_lines')
     log:
         f"{LOGDIR}/split_chr/{{sample}}.log"
-    shell: 'mkdir {output.split_folder}; split -d -l 50000 "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-"'
+    shell: 'mkdir {output.split_folder}; split -l {params.num_lines} "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-"'
 
 
 rule paste_header:
