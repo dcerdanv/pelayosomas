@@ -10,6 +10,7 @@ rule remove_vcf_header:
         walltime=get_resource('remove_vcf_header', 'walltime')
     log:
         f"{LOGDIR}/remove_vcf_header/{{sample}}.log"
+    priority: 1
     shell: "zcat {input.vcf} | sed '/^#/d' > {output.vcf_no_header}"
 
 
@@ -28,6 +29,7 @@ checkpoint split_chr:
         split_size = get_params('split_chr', 'num_lines')
     log:
         f"{LOGDIR}/split_chr/{{sample}}.log"
+    priority: 2
     shell: 'mkdir {output.split_folder}; split -l {params.num_lines} "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-"'
 
 
@@ -45,6 +47,7 @@ rule paste_header:
         header = get_params('paste_header', 'header_vcf')
     log:
         f"{LOGDIR}/paste_header/{{sample}}/{{sample}}.part-{{part}}.log"
+    priority: 3
     shell: 'cat {params.header} {input.split_file} > {output.headed_file}'
 
 
@@ -64,6 +67,9 @@ rule make_long:
         preHeader = get_params('make_long', 'preHeader')
     log:
         f"{LOGDIR}/make_long/{{sample}}/{{sample}}.part-{{part}}.log"
+    # After setting priority from filter, I set priorities between the above rules, so it is preferable to make the
+    # make_longs pending rather than, for example, unzip or split another chr; and thus prevent the disk from filling up 
+    priority: 4
     shell: 'python3 VCF-Simplify-master/VcfSimplify.py SimplifyVCF -toType table -inVCF {input.headed_file} -outFile {output.long_format_part} -infos {params.infos} -formats {params.formats} -preHeader {params.preHeader} -mode long'
 
 
