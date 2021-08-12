@@ -37,7 +37,7 @@ rule paste_header:
     input:
         split_file = f"{OUTDIR}/split/{{sample}}/{{sample}}.part-{{part}}",
     output:
-        headed_file = f"{OUTDIR}/headed/{{sample}}/{{sample}}.part-{{part}}"
+        headed_file = temp(f"{OUTDIR}/headed/{{sample}}/{{sample}}.part-{{part}}")
     threads:
         get_resource('default', 'threads')
     resources:
@@ -77,7 +77,7 @@ rule filter:
     input:
         long_part = rules.make_long.output.long_format_part
     output:
-        filter_part = f"{OUTDIR}/filtered_part/{{sample}}/{{sample}}.part-{{part}}"
+        filter_part = temp(f"{OUTDIR}/filtered_part/{{sample}}/{{sample}}.part-{{part}}")
     threads:
         get_resource('default', 'threads')
     resources:
