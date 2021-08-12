@@ -11,7 +11,7 @@ rule remove_vcf_header:
     log:
         f"{LOGDIR}/remove_vcf_header/{{sample}}.log"
     priority: 1
-    shell: "zcat {input.vcf} | sed '/^#/d' > {output.vcf_no_header} 2> {log}.err 1> {log}.out"
+    shell: "zcat {input.vcf} | sed '/^#/d' > {output.vcf_no_header}"
 
 
 # TODO ¿Revisar longitud de los sufijos. Cuantos pedazos va a haber para el primer cromosoma?
@@ -30,7 +30,7 @@ checkpoint split_chr:
     log:
         f"{LOGDIR}/split_chr/{{sample}}.log"
     priority: 2
-    shell: 'mkdir {output.split_folder}; split -l {params.num_lines} "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-" 2> {log}.err 1> {log}.out'
+    shell: 'mkdir {output.split_folder}; split -l {params.split_size} "{input.vcf_no_header}" "{output.split_folder}/{wildcards.sample}.part-"'
 
 
 rule paste_header:
@@ -48,7 +48,7 @@ rule paste_header:
     log:
         f"{LOGDIR}/paste_header/{{sample}}/{{sample}}.part-{{part}}.log"
     priority: 3
-    shell: 'cat {params.header} {input.split_file} > {output.headed_file} 2> {log}.err 1> {log}.out'
+    shell: 'cat {params.header} {input.split_file} > {output.headed_file}'
 
 
 rule make_long:
@@ -70,7 +70,7 @@ rule make_long:
     # After setting priority from filter, I set priorities between the above rules, so it is preferable to make the
     # make_longs pending rather than, for example, unzip or split another chr; and thus prevent the disk from filling up 
     priority: 4
-    shell: 'python3 VCF-Simplify-master/VcfSimplify.py SimplifyVCF -toType table -inVCF {input.headed_file} -outFile {output.long_format_part} -infos {params.infos} -formats {params.formats} -preHeader {params.preHeader} -mode long 2> {log}.err 1> {log}.out'
+    shell: 'python3 VCF-Simplify-master/VcfSimplify.py SimplifyVCF -toType table -inVCF {input.headed_file} -outFile {output.long_format_part} -infos {params.infos} -formats {params.formats} -preHeader {params.preHeader} -mode long'
 
 
 rule filter:
@@ -88,7 +88,7 @@ rule filter:
     # Set priority = 10 (Default = 0) to this rule and the following ones so that, if 'filter' and 'make_long'
     # are available, an instance of 'filter' is executed first and eliminate a possible long format file 
     priority: 10
-    shell: "sed '/\.\/\./d;/0\/0/d' {input.long_part} > {output.filter_part} 2> {log}.err 1> {log}.out"
+    shell: "sed '/\.\/\./d;/0\/0/d' {input.long_part} > {output.filter_part}"
 
 
 rule remove_tsv_header:
@@ -104,7 +104,7 @@ rule remove_tsv_header:
     log:
         f"{LOGDIR}/remove_tsv_header/{{sample}}/{{sample}}.part-{{part}}.log"
     priority: 10
-    shell: "tail -n +2 {input.filter_part} > {output.tsv_no_header} 2> {log}.err 1> {log}.out"
+    shell: "tail -n +2 {input.filter_part} > {output.tsv_no_header}"
 
 
 def aggregate_input(wildcards):
@@ -132,5 +132,5 @@ rule join_files:
     log:
         f"{LOGDIR}/join_files/{{sample}}.log"
     priority: 10
-    shell: "cat {params.header} {input} > {output.combined} 2> {log}.err 1> {log}.out"
+    shell: "cat {params.header} {input} > {output.combined}"
 
