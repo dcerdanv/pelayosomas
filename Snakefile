@@ -54,4 +54,4 @@ rule all:
 	resources:
 		mem=get_resource('default', 'mem'),
 		walltime=get_resource('default', 'walltime')
-	shell: f"rm -r {OUTDIR}/split; rm -r {OUTDIR}/headed; rm -r {OUTDIR}/long_part; rm -r {OUTDIR}/filtered_part; rm -r {OUTDIR}/filter_no_header"
+	shell: f"rm -r {OUTDIR}/split; rm -r {OUTDIR}/filter_no_header"
